@@ -1,1 +1,9 @@
-[]
+[
+ "ackbar.coffee",
+ "applause.coffee",
+ "coin.coffee",
+ "likeaboss.coffee",
+ "megusta.coffee",
+ "reload.coffee",
+ "xkcd.coffee"
+]
