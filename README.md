@@ -10,13 +10,13 @@ You can extend Labby in a few ways. Once you've done this see the restart instru
 
 ### hubot-scripts
 
-Labby has the (now depricated) [hubot-scripts][1] package installed. You can add a script from that package by adding the script name to [hubot-scripts.json](hubot-scripts.json).
+Labby has the (now depricated) [hubot-scripts][hubot-scripts] package installed. You can add a script from that package by adding the script name to [hubot-scripts.json](hubot-scripts.json).
 
 ### External hubot scripts
 
 New Hubot scripts are externally packaged and installed via npm. To add an external package you just add it as a dependency in [package.json](package.json) and include the package name in [external-scripts.json](external-scripts.json).
 
-A full list of external packages can be found in the [hubot-scripts org][2].
+A full list of external packages can be found in the [hubot-scripts org][scripts-org].
 
 ### Custom scripts
 
@@ -32,5 +32,6 @@ First you must make your changes to this repository and make sure they are merge
 
 Labby should then be good to go with your new functionality.
 
-[1]: https://github.com/github/hubot-scripts
-[2]: https://github.com/hubot-scripts
+[hubot-scripts]: https://github.com/github/hubot-scripts
+[scripts-org]: https://github.com/hubot-scripts
+[hubot]: https://hubot.github.com/
