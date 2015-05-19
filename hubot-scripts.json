@@ -1,6 +1,7 @@
 [
  "ackbar.coffee",
  "applause.coffee",
+ "bitly.coffee",
  "coin.coffee",
  "likeaboss.coffee",
  "megusta.coffee",
