@@ -1,5 +1,5 @@
 # Description:
-#   HAL cannot open the pod bay doors...
+#   You cannot open the pod bay doors...
 #
 # Dependencies:
 #   None
@@ -8,10 +8,10 @@
 #   None
 #
 # Commands:
-#   hubot open the pod bay doors - Display the expected message
+#   hubot open the pod bay doors - Display lines from the film
 #
 # Author:
-#   johanmeiring
+#   Jacob Tomlinson <jacob@jacobtomlinson.co.uk>
 
 module.exports = (robot) ->
 
