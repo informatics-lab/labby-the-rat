@@ -1,5 +1,5 @@
 {
-  "name": "labby",
+  "name": "Labby",
   "version": "0.0.0",
   "private": true,
   "author": "jacob.tomlinson@informaticslab.co.uk",
@@ -18,7 +18,9 @@
     "hubot-redis-brain": "0.0.2",
     "hubot-scripts": "~2.5.16",
     "hubot-slack": "~3.3.0",
-    "hubot": "~2.12.0"
+    "hubot": "~2.12.0",
+    "hubot-rss-reader": "~0.6.7",
+    "coffee-script": "~1.9.2",
   },
   "engines": {
     "node": "0.10.x"

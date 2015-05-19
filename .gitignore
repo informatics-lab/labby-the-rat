@@ -1,3 +1,8 @@
 node_modules
+tmp
+.viminfo
+.npm
+.editorconfig
 .DS_Store*
 .hubot_history
+.bash_history
