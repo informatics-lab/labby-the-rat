@@ -22,7 +22,7 @@ A full list of external packages can be found in the [hubot-scripts org][scripts
 
 You can also add your own scripts by creating a coffee-script file in the `scripts` directory in this repository. Sometimes this is better than using `hubot-scripts` or external scripts as you can customise them for Labby, just copy the contents of the desired script and hack away.
 
-See [example.coffee](scripts/example.coffee) for a ton of good examples to get you started.
+See [example.coffee](scripts/example.coffee) for a ton of good examples to get you started. There are also a ton of tutorials, [this][jonmagic-tutorial] is one of the better ones.
 
 ## Reloading Labby
 
@@ -35,3 +35,4 @@ Labby should then be good to go with your new functionality.
 [hubot-scripts]: https://github.com/github/hubot-scripts
 [scripts-org]: https://github.com/hubot-scripts
 [hubot]: https://hubot.github.com/
+[jonmagic-tutorial]: http://theprogrammingbutler.com/blog/archives/2011/10/28/hubot-scripts-explained/
