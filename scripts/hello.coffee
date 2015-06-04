@@ -23,6 +23,12 @@ mornings = [
     "Good day, %"
 ]
 
+byes = [
+    "Good bye, %",
+    "Au revoir, %",
+    "See ya, %"
+]
+
 module.exports = (robot) ->
     robot.hear /(\bsup\b|\bhi\b|\bhey\b|\bhello\b|\bgood( [d'])?ay(e)?\b)/i, (msg) ->
         hello = msg.random hellos
@@ -30,4 +36,8 @@ module.exports = (robot) ->
 
     robot.hear /(\b(good )?m(a|o)rnin(g)?\b)/i, (msg) ->
         hello = msg.random mornings
+        msg.send hello.replace "%", msg.message.user.name
+
+    robot.hear /(\bbye( bye)?\b|\bsee y(a|ou)\b|\bau revoir\b|\bgtg\b|I(')?m off)/i, (msg) ->
+        hello = msg.random byes
         msg.send hello.replace "%", msg.message.user.name
