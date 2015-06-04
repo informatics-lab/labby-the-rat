@@ -20,7 +20,9 @@
     "hubot-slack": "~3.3.0",
     "hubot": "~2.12.0",
     "hubot-rss-reader": "~0.6.7",
-    "coffee-script": "~1.9.2"
+    "coffee-script": "~1.9.2",
+    "hubot-seen": "~0.2.2",
+    "timeago": "~0.2.0"
   },
   "engines": {
     "node": "0.10.x"
