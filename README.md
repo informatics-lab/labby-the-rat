@@ -4,6 +4,8 @@ Labby is a chat bot built on the [Hubot][hubot] framework.
 
 For more information about generic hubot behaviour see [hubot.md](hubot.md).
 
+Labby now runs on Docker!
+
 ## Extending Labby
 
 You can extend Labby in a few ways. Once you've done this see the restart instructions below to make the changes take effect.
