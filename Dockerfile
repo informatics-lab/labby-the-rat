@@ -4,7 +4,7 @@ MAINTAINER Jacob Tomlinson <jacob.tomlinson@informaticslab.co.uk>
 ENV BOTDIR /opt/labby
 ENV HUBOT_PORT 8080
 
-RUN git clone --depth=1 https://github.com/met-office-lab/labby-the-rat.git ${BOTDIR}
+ADD [^.]* ${BOTDIR}/
 
 WORKDIR ${BOTDIR}
 
