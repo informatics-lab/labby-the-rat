@@ -16,6 +16,24 @@
 class Timesheets
   constructor: (@robot) ->
     @cache = {}
+    @activities = {
+      "Project Work": ["coding", "programming", "science", "designing", "design"],
+      "Admin": ["admin", "house keeping"],
+      "Personal Development": ["reading", "thinking", "learning", "studying", "research"],
+      "Outreach": ["outreach", "STEM", "teaching"]
+    }
+    @positive_adjectives = [
+      'Great',
+      'Awesome',
+      'Amazing',
+      'Wonderful',
+      'Splended',
+      'Super',
+      'Sweet',
+      'Well done',
+      'Nice',
+      'Ace'
+    ]
 
     @robot.brain.on 'loaded', =>
       if (cachedTimesheets = @robot.brain.data.timesheets)
@@ -29,17 +47,31 @@ class Timesheets
     effort = new Effort(cachedEffort.participant, cachedEffort.id, cachedEffort.elapsed)
     effort
 
-  addEffort: (participant, id, elapsed) ->
+  addEffort: (participant, id, elapsed, msg) ->
+    acceptedId = false
     categoryExists = false
+    parent_id = null
+
+    for activity, names of @activities
+      if id in names
+        parent_id = activity
+        acceptedId = true
+
+    unless acceptedId
+      msg.send "Sorry but you're not paid to #{id}. Go do something useful..."
+      return
+
     for effort_id, efforts of @cache[participant]
-      if id is effort_id
+      if parent_id is effort_id
         for effort in efforts
           effort.addTime elapsed
           categoryExists = true
+          msg.send "#{msg.random @positive_adjectives}, I've added #{elapsed} hour#{effort.pluralize(elapsed)} of #{id}, that makes a total of #{effort.getHours()} of #{parent_id} this week."
 
     unless categoryExists
-      effort = new Effort(participant, id, elapsed)
+      effort = new Effort(participant, parent_id, elapsed)
       ((@cache[effort.participant] ||= {})[effort.id] ||= []).push  effort
+      msg.send "#{msg.random @positive_adjectives}, I will add your #{elapsed} hour#{effort.pluralize(elapsed)} of #{id} to the #{parent_id} section on your timesheet."
 
     @persistCache()
 
@@ -48,7 +80,7 @@ class Timesheets
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
-    """Tracked time for #{participant}:
+    """Your hours this week:
       #{for effort_id, efforts of @cache[participant]
         (effort.summary() for effort in efforts).join '\n'}
     """
@@ -56,7 +88,7 @@ class Timesheets
   retrieveAll: (participant) ->
     return "Sorry, I have no timesheets recorded. Better get the hammer for those slackers..." unless Object.keys(@cache).length > 0
     for participant of @cache
-      """Tracked time for #{participant}:
+      """Hours this week for #{participant}:
         #{for effort_id, efforts of @cache[participant]
           (effort.summary() for effort in efforts).join '\n'}
       """
@@ -116,8 +148,7 @@ module.exports = (robot) ->
       msg.send "Sorry #{msg.message.user.name}, only grand-overlord #{admin_user} can see all the timesheets."
 
   robot.respond /[Ii](')?ve done (.*) hour(s)? of (.*)/i, (msg) ->
-    timesheets.addEffort(participant_and_effort(msg)...)
-    msg.send "Great, I will add #{time_length(msg)} hours of #{effort_id(msg)} to your timesheet."
+    timesheets.addEffort(participant_and_effort(msg)..., msg)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
     timesheets.clearFor(participant msg)
