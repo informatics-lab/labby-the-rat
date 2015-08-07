@@ -67,7 +67,7 @@ class Timesheets
         acceptedId = true
 
     unless acceptedId
-      msg.send "Sorry but you're not paid to #{id}. Go do something useful..."
+      msg.send "Sorry but you're not paid for #{id}. Go do something useful..."
       return
 
     for effort_id, efforts of @cache[@week][participant]
