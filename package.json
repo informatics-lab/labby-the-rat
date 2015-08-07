@@ -1,6 +1,6 @@
 {
   "name": "Labby",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "private": true,
   "author": "jacob.tomlinson@informaticslab.co.uk",
   "description": "The Informatics Lab rat in residence",
@@ -15,7 +15,7 @@
     "hubot-rules": "~0.1.0",
     "hubot-heroku-keepalive": "0.0.4",
     "hubot-google-translate": "~0.1.0",
-    "hubot-redis-brain": "0.0.2",
+    "hubot-mongodb-brain": "0.1.0",
     "hubot-scripts": "~2.5.16",
     "hubot-slack": "~3.3.0",
     "hubot": "~2.12.0",
