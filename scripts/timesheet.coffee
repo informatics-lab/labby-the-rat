@@ -13,9 +13,18 @@
 #   show all timesheets - Display timesheets for all users (but only if you're the boss)
 #   reset my timesheet - Clear all entries from my timesheet (may also say 'clear my timesheet')
 
+Date::getWeek = ->
+  oneJan = new Date(@getFullYear(),0,1);
+  today = new Date(@getFullYear(),@getMonth(),@getDate());
+  dayOfYear = ((today - oneJan + 1)/86400000);
+  Math.ceil(dayOfYear/7)
+
 class Timesheets
   constructor: (@robot) ->
+    @today = new Date()
+    @week = @today.getWeek()
     @cache = {}
+    @cache[@week] = {}
     @activities = {
       "Project Work": ["coding", "programming", "science", "designing", "design"],
       "Admin": ["admin", "house keeping"],
@@ -40,7 +49,7 @@ class Timesheets
         console.log "Reloading #{Object.keys(cachedTimesheets).length} previously cached timesheet(s)..."
         for participant, cachedEfforts of cachedTimesheets
           for effortId, effortList of cachedEfforts
-            (@cache[participant] ||= {})[effortId] = (Timesheets.buildEffort(effort) for effort in effortList)
+            (@cache[@week][participant] ||= {})[effortId] = (Timesheets.buildEffort(effort) for effort in effortList)
 
 
   @buildEffort: (cachedEffort) ->
@@ -61,7 +70,7 @@ class Timesheets
       msg.send "Sorry but you're not paid to #{id}. Go do something useful..."
       return
 
-    for effort_id, efforts of @cache[participant]
+    for effort_id, efforts of @cache[@week][participant]
       if parent_id is effort_id
         for effort in efforts
           effort.addTime elapsed
@@ -70,7 +79,7 @@ class Timesheets
 
     unless categoryExists
       effort = new Effort(participant, parent_id, elapsed)
-      ((@cache[effort.participant] ||= {})[effort.id] ||= []).push  effort
+      ((@cache[@week][effort.participant] ||= {})[effort.id] ||= []).push  effort
       msg.send "#{msg.random @positive_adjectives}, I will add your #{elapsed} hour#{effort.pluralize(elapsed)} of #{id} to the #{parent_id} section on your timesheet."
 
     @persistCache()
@@ -79,23 +88,24 @@ class Timesheets
     @robot.brain.data.timesheets = @cache
 
   retrieve: (participant) ->
-    return "I have no timesheet recorded for #{participant}" unless @cache[participant]
-    """Your hours this week:
-      #{for effort_id, efforts of @cache[participant]
+    return "I have no timesheet recorded for #{participant}" unless @cache[@week][participant]
+    """Your hours for week #{@week}:
+      #{for effort_id, efforts of @cache[@week][participant]
         (effort.summary() for effort in efforts).join '\n'}
     """
 
-  retrieveAll: (participant) ->
-    return "Sorry, I have no timesheets recorded. Better get the hammer for those slackers..." unless Object.keys(@cache).length > 0
+  retrieveAll: (msg) ->
+    msg.send "Sorry, I have no timesheets recorded. Better get the hammer for those slackers..." unless Object.keys(@cache).length > 0
+    msg.send "Hours for week #{@week}"
     for participant of @cache
-      """Hours this week for #{participant}:
-        #{for effort_id, efforts of @cache[participant]
-          (effort.summary() for effort in efforts).join '\n'}
-      """
+      msg.send  """#{participant}:
+                  #{for effort_id, efforts of @cache[@week][participant]
+                    (effort.summary() for effort in efforts).join '\n'}
+                """
 
   clearFor: (participant) ->
-    return unless @cache[participant]?
-    delete @cache[participant]
+    return unless @cache[@week][participant]?
+    delete @cache[@week][participant]
     @persistCache()
 
 class Effort
@@ -141,13 +151,13 @@ module.exports = (robot) ->
   robot.respond /show my time(sheet)?/i, (msg) ->
     msg.send timesheets.retrieve(participant msg)
 
-  robot.respond /show all time(sheet)?(s)?/i, (msg) ->
+  robot.respond /show all time(sheet)?(s)?( for week ([0-9]+))?/i, (msg) ->
     if msg.message.user.name is admin_user
-      msg.send timesheets.retrieveAll(msg)
+      timesheets.retrieveAll(msg)
     else
       msg.send "Sorry #{msg.message.user.name}, only grand-overlord #{admin_user} can see all the timesheets."
 
-  robot.respond /[Ii](')?ve done (.*) hour(s)? of (.*)/i, (msg) ->
+  robot.respond /[Ii](')?ve done ([0-9]+) hour(s)? of (.*)/i, (msg) ->
     timesheets.addEffort(participant_and_effort(msg)..., msg)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
