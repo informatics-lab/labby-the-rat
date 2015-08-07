@@ -8,9 +8,9 @@
 #   None
 #
 # Commands:
-#   i'm starting <story number> - Start a timer for the given effort
-#   i'm done with <story number> - Stop timer for the given effort
-#   show my timesheet - Display the time hubot has accumulated for you
+#   i've done <number> hours of <category> - Record hours for a category
+#   show my timesheet - Display the time labby has accumulated for you
+#   show all timesheets - Display timesheets for all users (but only if you're the boss)
 #   reset my timesheet - Clear all entries from my timesheet (may also say 'clear my timesheet')
 
 class Timesheets
@@ -29,9 +29,18 @@ class Timesheets
     effort = new Effort(cachedEffort.participant, cachedEffort.id, cachedEffort.elapsed)
     effort
 
-  addEffort: (@participant, @id, @elapsed) ->
-    effort = new Effort(@participant, @id, @elapsed)
-    ((@cache[effort.participant] ||= {})[effort.id] ||= []).push  effort
+  addEffort: (participant, id, elapsed) ->
+    categoryExists = false
+    for effort_id, efforts of @cache[participant]
+      if id is effort_id
+        for effort in efforts
+          effort.addTime elapsed
+          categoryExists = true
+
+    unless categoryExists
+      effort = new Effort(participant, id, elapsed)
+      ((@cache[effort.participant] ||= {})[effort.id] ||= []).push  effort
+
     @persistCache()
 
   persistCache: ->
@@ -95,7 +104,7 @@ module.exports = (robot) ->
 
   time_length = (msg) -> msg.match[2]
 
-  participant_and_effort = (msg) -> [participant(msg), effort_id(msg), time_length(msg)]
+  participant_and_effort = (msg) -> [participant(msg), effort_id(msg), parseInt(time_length(msg))]
 
   robot.respond /show my time(sheet)?/i, (msg) ->
     msg.send timesheets.retrieve(participant msg)
@@ -104,7 +113,7 @@ module.exports = (robot) ->
     if msg.message.user.name is admin_user
       msg.send timesheets.retrieveAll(msg)
     else
-      msg.send "Sorry #{msg.message.user.name}, only grand-overlord Alberto can see all the timesheets."
+      msg.send "Sorry #{msg.message.user.name}, only grand-overlord #{admin_user} can see all the timesheets."
 
   robot.respond /[Ii](')?ve done (.*) hour(s)? of (.*)/i, (msg) ->
     timesheets.addEffort(participant_and_effort(msg)...)
@@ -115,7 +124,7 @@ module.exports = (robot) ->
     msg.send "OK #{participant msg}, your timesheet is now reset"
 
   robot.respond /timesheet help/i, (msg) ->
-    msg.send "Ha you're on your own buddy!"
+    msg.send "Ha, you're on your own buddy!"
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets
