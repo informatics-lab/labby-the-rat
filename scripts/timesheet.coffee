@@ -157,7 +157,7 @@ module.exports = (robot) ->
     else
       msg.send "Sorry #{msg.message.user.name}, only grand-overlord #{admin_user} can see all the timesheets."
 
-  robot.respond /[Ii](')?ve done ([0-9]+) hour(s)? of (.*)/i, (msg) ->
+  robot.respond /[Ii]('| ha)?ve done ([0-9-.]+) hour(s)? of (.*)/i, (msg) ->
     timesheets.addEffort(participant_and_effort(msg)..., msg)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
