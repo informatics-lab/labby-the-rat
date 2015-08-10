@@ -161,11 +161,15 @@ module.exports = (robot) ->
     timesheets.addEffort(participant_and_effort(msg)..., msg)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
+    msg.send "Are you sure? If yes say 'Definitely clear my timesheet'"
+
+  robot.respond /[Dd]efinitely (clear|reset) my time(sheet)?/i, (msg) ->
     timesheets.clearFor(participant msg)
     msg.send "OK #{participant msg}, your timesheet is now reset"
 
   robot.respond /timesheet help/i, (msg) ->
-    msg.send "Ha, you're on your own buddy!"
+    msg.send "Say something like 'I've done x hours of y', just be sure y is something you're actually paid to do!"
+    msg.send "You can also ask me to 'show my timesheet', or if you're a right numpty and want to start again 'clear my timesheet'."
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets
