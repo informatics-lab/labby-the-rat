@@ -142,9 +142,9 @@ module.exports = (robot) ->
 
   participant = (msg) -> msg.message.user.name
 
-  effort_id = (msg) -> msg.match[4]
+  effort_id = (msg) -> msg.match[2]
 
-  time_length = (msg) -> msg.match[2]
+  time_length = (msg) -> msg.match[1]
 
   participant_and_effort = (msg) -> [participant(msg), effort_id(msg), parseInt(time_length(msg))]
 
