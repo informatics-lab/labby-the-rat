@@ -157,13 +157,14 @@ module.exports = (robot) ->
     else
       msg.send "Sorry #{msg.message.user.name}, only grand-overlord #{admin_user} can see all the timesheets."
 
-  robot.respond /[Ii]('| ha)?ve done ([0-9-.]+) hour(s)? of (.*)/i, (msg) ->
+  # Tests: http://regexr.com/3bi5d
+  robot.respond /i(?:'| ha)?ve done (-?[0-9]+(?:\.[0-9])?) hour(?:s)? of (.*)/i, (msg) ->
     timesheets.addEffort(participant_and_effort(msg)..., msg)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
     msg.send "Are you sure? If yes say 'Definitely clear my timesheet'"
 
-  robot.respond /[Dd]efinitely (clear|reset) my time(sheet)?/i, (msg) ->
+  robot.respond /definitely (clear|reset) my time(sheet)?/i, (msg) ->
     timesheets.clearFor(participant msg)
     msg.send "OK #{participant msg}, your timesheet is now reset"
 
