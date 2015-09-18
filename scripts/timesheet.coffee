@@ -169,8 +169,8 @@ module.exports = (robot) ->
     msg.send "OK #{participant msg}, your timesheet is now reset"
 
   robot.respond /timesheet help/i, (msg) ->
-    msg.send "Say something like 'I've done x hours of y', just be sure y is something you're actually paid to do!"
-    msg.send "You can also ask me to 'show my timesheet', or if you're a right numpty and want to start again 'clear my timesheet'."
+    msg.send "Say something like `I've done x hours of y`, just be sure y is something you're actually paid to do! (If you're unsure say `what am I paid to do?`)"
+    msg.send "You can also ask me to `show my timesheet`, or if you're a right numpty and want to start again say `clear my timesheet`."
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets
