@@ -85,6 +85,7 @@ class Timesheets
     @persistCache()
 
   persistCache: ->
+    @robot.logger.debug 'Persisting cache.'
     @robot.brain.data.timesheets = @cache
     @robot.brain.save()
 
