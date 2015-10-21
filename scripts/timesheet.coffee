@@ -86,6 +86,7 @@ class Timesheets
 
   persistCache: ->
     @robot.brain.data.timesheets = @cache
+    @robot.brain.save()
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[@week][participant]
