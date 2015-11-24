@@ -1,13 +1,14 @@
 [
+  "hubot-codinglove",
   "hubot-diagnostics",
   "hubot-help",
   "hubot-google-images",
   "hubot-google-translate",
   "hubot-pugme",
   "hubot-maps",
-  "hubot-redis-brain",
-  "hubot-rss-reader",
+  "hubot-mongodb-brain",
   "hubot-rules",
+  "hubot-seen",
   "hubot-shipit",
   "hubot-youtube"
 ]
