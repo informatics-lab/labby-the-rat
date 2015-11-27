@@ -7,3 +7,4 @@ tmp
 .hubot_history
 .bash_history
 hubot.env
+.idea
