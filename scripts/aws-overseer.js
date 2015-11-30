@@ -123,7 +123,8 @@ module.exports = function (robot) {
         if (group && group.indexOf(',') != -1) {
             // possible list of instance ids
             group.split(",").forEach(function (str) {
-                if (str.trim().match(AWS_ID_REGEXP)) {
+                str = str.trim();
+                if (str.match(AWS_ID_REGEXP)) {
                     validInstances.push(str);
                 } else {
                     return null;
