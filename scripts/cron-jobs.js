@@ -62,7 +62,7 @@ module.exports = function (robot) {
                         t.cell("Current State", instance.CurrentState.Name);
                         t.newRow();
                     });
-                    msg.send("Started AWS Instances:\n" + t.toString());
+                    msg.send("Started AWS Instances:\n```\n" + t.toString() + "\n```");
                 }).catch(function (reason) {
                     robot.logger.debug(reason, reason.stack);
                     msg.send("Sorry I was unable to start the dev AWS instances, please check the log file.");
@@ -108,7 +108,7 @@ module.exports = function (robot) {
                         t.cell("Current State", instance.CurrentState.Name);
                         t.newRow();
                     });
-                    msg.send("Stopped AWS Instances:\n" + t.toString());
+                    msg.send("Stopped AWS Instances:\n```\n" + t.toString()+"\n```");
                 }).catch(function (reason) {
                     robot.logger.debug(reason, reason.stack);
                     msg.send("Sorry I was unable to stop the dev AWS instances, please check the log file.");

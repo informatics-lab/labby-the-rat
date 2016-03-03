@@ -163,7 +163,7 @@ module.exports = function (robot) {
             t.newRow();
         });
 
-        msg.send("The following AWS commands will help you manage your EC2 instances...\n" + t.toString());
+        msg.send("The following AWS commands will help you manage your EC2 instances...\n```\n" + t.toString()+"\n```");
 
     });
 
@@ -178,7 +178,7 @@ module.exports = function (robot) {
                 t.cell('Status', instance.state);
                 t.newRow();
             });
-            msg.send("Current AWS status:\n" + t.toString());
+            msg.send("Current AWS status:\n```\n" + t.toString()+"\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
@@ -202,7 +202,7 @@ module.exports = function (robot) {
                 t.cell("Current State", instance.CurrentState.Name);
                 t.newRow();
             });
-            msg.send("Started AWS Instances:\n" + t.toString());
+            msg.send("Started AWS Instances:\n```\n" + t.toString()+"\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
@@ -227,7 +227,7 @@ module.exports = function (robot) {
                 t.cell("Current State", instance.CurrentState.Name);
                 t.newRow();
             });
-            msg.send("Stopped AWS Instances:\n" + t.toString());
+            msg.send("Stopped AWS Instances:\n```\n" + t.toString()+"\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
