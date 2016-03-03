@@ -174,6 +174,7 @@ module.exports = function (robot) {
             result.forEach(function (instance) {
                 t.cell("ID", instance.id);
                 t.cell('Name', instance.name);
+                t.cell('Environment', instance.environment);
                 t.cell('Status', instance.state);
                 t.newRow();
             });
