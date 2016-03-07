@@ -4,17 +4,20 @@
  *
  * Dependencies:
  *   "cron": "^1.0.9"
+ *   "easy-table": "^1.0.0"
  *
  * Author:
  *   Tom Powell
  *   t.powell.meto@gmail.com
  */
 
+var Table = require('easy-table');
+var myAWS = require('./my-aws');
+var CronJob = require('cron').CronJob;
+
 var randItem = function (array) {
     return array[Math.floor(Math.random() * array.length)];
 };
-
-var CronJob = require('cron').CronJob;
 
 var hellos = [
     "Morning everyone, I'm in work bright and early and ready to get stuff done!",
@@ -39,13 +42,17 @@ module.exports = function (robot) {
     var sayGoodMorning = new CronJob({
         cronTime: '00 00 08 * * 1-5',
         onTick: function () {
+
+            /*
+             * Give greeting in Slack channel
+             */
             robot.messageRoom('general', randItem(hellos));
 
             /*
              * Start up AWS boxes tagged with an 'environment' of 'dev' by using the global
              * functionality from the aws-overseer script
              */
-            var instanceDetails = getEc2Satuses();
+            var instanceDetails = myAWS.getEc2Satuses();
             instanceDetails.then(function (result) {
                 var ids = [];
                 result.forEach(function (instance) {
@@ -53,7 +60,7 @@ module.exports = function (robot) {
                         ids.push(instance.id);
                     }
                 });
-                var start = startEc2Instances(ids);
+                var start = myAWS.startEc2Instances(ids);
                 start.then(function (result) {
                     var t = new Table;
                     result.StartingInstances.forEach(function (instance) {
@@ -62,14 +69,14 @@ module.exports = function (robot) {
                         t.cell("Current State", instance.CurrentState.Name);
                         t.newRow();
                     });
-                    msg.send("Started AWS Instances:\n```\n" + t.toString() + "\n```");
+                    robot.messageRoom('general', "Started AWS Instances:\n```\n" + t.toString() + "\n```");
                 }).catch(function (reason) {
                     robot.logger.debug(reason, reason.stack);
-                    msg.send("Sorry I was unable to start the dev AWS instances, please check the log file.");
+                    robot.messageRoom('general', "Sorry I was unable to start the dev AWS instances, please check the log file.");
                 });
             }).catch(function (reason) {
                 robot.logger.debug(reason, reason.stack);
-                msg.send("Sorry I was unable to get the aws instance details, please check the log file.");
+                robot.messageRoom('general', "Sorry I was unable to get the aws instance details, please check the log file.");
             });
         },
         start: false
@@ -90,7 +97,7 @@ module.exports = function (robot) {
              * Stops AWS boxes tagged with an 'environment' of 'dev' by using the global
              * functionality from the aws-overseer script
              */
-            var instanceDetails = getEc2Satuses();
+            var instanceDetails = myAWS.getEc2Satuses();
             instanceDetails.then(function (result) {
                 var ids = [];
                 result.forEach(function (instance) {
@@ -98,7 +105,7 @@ module.exports = function (robot) {
                         ids.push(instance.id);
                     }
                 });
-                var stop = stopEc2Instances(ids);
+                var stop = myAWS.stopEc2Instances(ids);
                 stop.then(function (result) {
                     robot.logger.debug(result);
                     var t = new Table;
@@ -108,18 +115,34 @@ module.exports = function (robot) {
                         t.cell("Current State", instance.CurrentState.Name);
                         t.newRow();
                     });
-                    msg.send("Stopped AWS Instances:\n```\n" + t.toString()+"\n```");
+                    robot.messageRoom('general', "Stopped AWS Instances:\n```\n" + t.toString()+"\n```");
                 }).catch(function (reason) {
                     robot.logger.debug(reason, reason.stack);
-                    msg.send("Sorry I was unable to stop the dev AWS instances, please check the log file.");
+                    robot.messageRoom('general', "Sorry I was unable to stop the dev AWS instances, please check the log file.");
                 });
             }).catch(function (reason) {
                 robot.logger.debug(reason, reason.stack);
-                msg.send("Sorry I was unable to get the aws instance details, please check the log file.");
+                robot.messageRoom('general', "Sorry I was unable to get the aws instance details, please check the log file.");
             });
         },
         start: false
     });
     sayGoodNight.start();
+
+
+    /*
+     * Just a test cron function for debugging - make sure to comment out when making live!
+     */
+    //var cronTest = new CronJob({
+    //    cronTime: '*/10 * * * * *',
+    //    onTick: function () {
+    //
+    //        robot.logger.debug("10 seconds");
+    //        //robot.logger.debug(myAWS);
+    //
+    //    },
+    //    start: false
+    //});
+    //cronTest.start();
 
 };
