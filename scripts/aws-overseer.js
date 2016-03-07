@@ -3,7 +3,6 @@
  *   Allows control over the status of AWS services
  *
  * Dependencies:
- *   "aws-sdk": "^2.2.18"
  *   "easy-table": "^1.0.0"
  *
  * Configuration:
@@ -18,98 +17,8 @@
  *   t.powell.meto@gmail.com
  */
 
-var AWS = require('aws-sdk');
 var Table = require('easy-table');
-
-// Set your region for future requests.
-AWS.config.region = 'eu-west-1';
-//  make sure we are using the version of the api we coded this against!
-var ec2 = new AWS.EC2({apiVersion: '2015-10-01'});
-
-
-/*
- * could extend this in the future to allow a search term - possibly id or partial/whole name
- */
-/**
- * Gets the ids, names & statuses of the current EC2 instances.
- */
-var getEc2Satuses = function () {
-
-    return new Promise(function (resolve, reject) {
-        ec2.describeInstances({DryRun: false}, function (err, data) {
-            if (err) {
-                reject(err);
-            } else {
-                var instanceStates = [];
-                data.Reservations.forEach(function (reservation) {
-                    reservation.Instances.forEach(function (instance) {
-                        var instanceDetails = {};
-                        instance.Tags.forEach(function (tag) {
-                            if (tag.Key.toLowerCase() === 'name') {
-                                instanceDetails['name'] = tag.Value;
-                            } else if (tag.Key.toLowerCase() === 'environment') {
-                                instanceDetails['environment'] = tag.Value;
-                            }
-                        });
-                        instanceDetails['id'] = instance.InstanceId;
-                        instanceDetails['state'] = instance.State.Name;
-                        instanceStates.push(instanceDetails);
-                    });
-                });
-                resolve(instanceStates);
-            }
-        });
-    });
-};
-
-/**
- * Start all EC2 instances with the given ids.
- * @param{String[]} ids - the ids of the EC2 instances to start.
- */
-var startEc2Instances = function (ids) {
-
-    return new Promise(function (resolve, reject) {
-
-        var params = {
-            InstanceIds: ids,
-            DryRun: false
-        };
-
-        ec2.startInstances(params, function (err, data) {
-            if (err) {
-                reject(err);
-            }
-            else {
-                resolve(data);
-            }
-        });
-    });
-};
-
-/**
- * Stop all EC2 instances with the given ids.
- * @param{String[]} ids - the ids of the EC2 instances to stop.
- */
-var stopEc2Instances = function (ids) {
-
-    return new Promise(function (resolve, reject) {
-
-        var params = {
-            InstanceIds: ids,
-            DryRun: false
-        };
-
-        ec2.stopInstances(params, function (err, data) {
-            if (err) {
-                reject(err);
-            }
-            else {
-                resolve(data);
-            }
-        });
-    });
-};
-
+var myAWS = require('./my-aws');
 
 /**
  * Hubot command functionality.
@@ -163,12 +72,12 @@ module.exports = function (robot) {
             t.newRow();
         });
 
-        msg.send("The following AWS commands will help you manage your EC2 instances...\n```\n" + t.toString()+"\n```");
+        msg.send("The following AWS commands will help you manage your EC2 instances...\n```\n" + t.toString() + "\n```");
 
     });
 
     robot.hear("^aws status", function (msg) {
-        var instanceDetails = getEc2Satuses();
+        var instanceDetails = myAWS.getEc2Satuses();
         instanceDetails.then(function (result) {
             var t = new Table;
             result.forEach(function (instance) {
@@ -178,7 +87,7 @@ module.exports = function (robot) {
                 t.cell('Status', instance.state);
                 t.newRow();
             });
-            msg.send("Current AWS status:\n```\n" + t.toString()+"\n```");
+            msg.send("Current AWS status:\n```\n" + t.toString() + "\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
@@ -193,7 +102,7 @@ module.exports = function (robot) {
             return;
         }
 
-        var start = startEc2Instances(validInstances);
+        var start = myAWS.startEc2Instances(validInstances);
         start.then(function (result) {
             var t = new Table;
             result.StartingInstances.forEach(function (instance) {
@@ -202,7 +111,7 @@ module.exports = function (robot) {
                 t.cell("Current State", instance.CurrentState.Name);
                 t.newRow();
             });
-            msg.send("Started AWS Instances:\n```\n" + t.toString()+"\n```");
+            msg.send("Started AWS Instances:\n```\n" + t.toString() + "\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
@@ -217,7 +126,7 @@ module.exports = function (robot) {
             return;
         }
 
-        var stop = stopEc2Instances(validInstances);
+        var stop = myAWS.stopEc2Instances(validInstances);
         stop.then(function (result) {
             robot.logger.debug(result);
             var t = new Table;
@@ -227,7 +136,7 @@ module.exports = function (robot) {
                 t.cell("Current State", instance.CurrentState.Name);
                 t.newRow();
             });
-            msg.send("Stopped AWS Instances:\n```\n" + t.toString()+"\n```");
+            msg.send("Stopped AWS Instances:\n```\n" + t.toString() + "\n```");
         }).catch(function (reason) {
             robot.logger.debug(reason, reason.stack);
             msg.send("Sorry I was unable to do that, please check the log file.");
