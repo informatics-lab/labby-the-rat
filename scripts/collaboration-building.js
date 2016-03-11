@@ -18,13 +18,15 @@ var sentences = [
     "It's coming along!"
 ];
 
+var imageUrl = "https://timelapse.regenology.co.uk/api/latest_image/aOj/";
+
 /**
  * Hubot command functionality.
  */
 module.exports = function (robot) {
 
     /*
-     * Runs every Friday at 09:30:00 AM. 
+     * Runs every Friday at 09:30:00 AM.
      */
     var postNewBuilding = new CronJob({
         cronTime: '00 30 09 * * 5',
@@ -34,7 +36,7 @@ module.exports = function (robot) {
              * Give greeting in Slack channel
              */
             robot.messageRoom('random', randItem(sentences));
-            robot.messageRoom('random', "https://timelapse.regenology.co.uk/api/latest_image/aOj/");
+            robot.messageRoom('random', imageUrl);
         },
         start: false
     });
