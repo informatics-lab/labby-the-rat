@@ -1,4 +1,4 @@
-# Labby
+# Labby [![Docker Repository on Quay](https://quay.io/repository/informaticslab/labby-the-rat/status "Docker Repository on Quay")](https://quay.io/repository/informaticslab/labby-the-rat)
 
 Labby is a chat bot built on the [Hubot][hubot] framework.
 
