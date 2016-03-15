@@ -1,6 +1,6 @@
 /*
  * Description:
- *   Allows cron job functionality in hubot
+ *   Allows cron job functionality of aws services in hubot
  *
  * Dependencies:
  *   "cron": "^1.0.9"
@@ -60,6 +60,10 @@ module.exports = function (robot) {
                         ids.push(instance.id);
                     }
                 });
+                if(ids.length < 1){
+                    robot.messageRoom('general', "I can't find any dev instances that need starting up this morning.");
+                    return;
+                }
                 var start = myAWS.startEc2Instances(ids);
                 start.then(function (result) {
                     var t = new Table;
@@ -105,6 +109,10 @@ module.exports = function (robot) {
                         ids.push(instance.id);
                     }
                 });
+                if(ids.length < 1){
+                    robot.messageRoom('general', "I can't find any dev instances that need shutting down this evening.");
+                    return;
+                }
                 var stop = myAWS.stopEc2Instances(ids);
                 stop.then(function (result) {
                     robot.logger.debug(result);
