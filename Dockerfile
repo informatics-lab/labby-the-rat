@@ -1,4 +1,4 @@
-FROM node:0.10-onbuild
+FROM node:0.12-onbuild
 MAINTAINER Jacob Tomlinson <jacob.tomlinson@informaticslab.co.uk>
 
 ENV BOTDIR /opt/labby
