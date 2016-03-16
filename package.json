@@ -4,6 +4,9 @@
   "private": true,
   "author": "jacob.tomlinson@informaticslab.co.uk",
   "description": "The Informatics Lab rat in residence",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register tests"
+  },
   "dependencies": {
     "aws-sdk": "^2.2.18",
     "coffee-script": "~1.9.2",
@@ -27,6 +30,14 @@
     "hubot-slack": "~3.3.0",
     "hubot-youtube": "~0.1.2",
     "timeago": "~0.2.0"
+  },
+  "devDependencies": {
+    "chai": "latest",
+    "co": "latest",
+    "hubot-test-helper": "latest",
+    "mocha": "latest",
+    "nock": "latest",
+    "sinon": "latest"
   },
   "engines": {
     "node": "0.10.x"

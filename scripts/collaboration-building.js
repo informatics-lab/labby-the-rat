@@ -20,6 +20,10 @@ var sentences = [
 
 var imageUrl = "https://timelapse.regenology.co.uk/api/latest_image/aOj/";
 
+var randItem = function (array) {
+    return array[Math.floor(Math.random() * array.length)];
+};
+
 /**
  * Hubot command functionality.
  */
@@ -28,10 +32,9 @@ module.exports = function (robot) {
     /*
      * Runs every Friday at 09:30:00 AM.
      */
-    var postNewBuilding = new CronJob({
+    robot.postNewBuilding = new CronJob({
         cronTime: '00 30 09 * * 5',
         onTick: function () {
-
             /*
              * Give greeting in Slack channel
              */
@@ -40,6 +43,6 @@ module.exports = function (robot) {
         },
         start: false
     });
-    postNewBuilding.start();
+    robot.postNewBuilding.start();
 
 };
