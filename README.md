@@ -34,7 +34,13 @@ First you must make your changes to this repository and make sure they are merge
 
 Labby should then be good to go with your new functionality.
 
+## Testing Labby
+Tests can be run using
+`npm run test`
+
+
 [hubot-scripts]: https://github.com/github/hubot-scripts
 [scripts-org]: https://github.com/hubot-scripts
 [hubot]: https://hubot.github.com/
 [jonmagic-tutorial]: http://theprogrammingbutler.com/blog/archives/2011/10/28/hubot-scripts-explained/
+
