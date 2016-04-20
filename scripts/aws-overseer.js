@@ -51,7 +51,7 @@ module.exports = function (robot) {
     robot.hear("^aws help", function (msg) {
 
         var status = {
-            'command': "aws status",
+            'command': "*aws status*",
             'description': "Responds with the ID, Name and Status of all AWS EC2 instances " +
             "currently in the AWS region: " + AWS.config.region
         };
