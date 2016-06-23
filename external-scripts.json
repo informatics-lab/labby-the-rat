@@ -5,6 +5,7 @@
   "hubot-google-images",
   "hubot-google-translate",
   "hubot-pugme",
+  "hubot-manpages",
   "hubot-maps",
   "hubot-mongodb-brain",
   "hubot-rules",

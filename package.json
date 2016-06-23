@@ -19,6 +19,7 @@
     "hubot-google-translate": "~0.1.0",
     "hubot-help": "~0.1.1",
     "hubot-heroku-keepalive": "0.0.4",
+    "hubot-manpages": "git+https://github.com/met-office-lab/hubot-manpages.git",
     "hubot-maps": "0.0.2",
     "hubot-mongodb-brain": "^0.1.0",
     "hubot-pugme": "~0.1.0",
